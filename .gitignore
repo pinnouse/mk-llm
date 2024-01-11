@@ -1,4 +1,6 @@
 **.env
 .env
 
+.mise.toml
+
 __pycache__
