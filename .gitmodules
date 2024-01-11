@@ -1,0 +1,3 @@
+[submodule "first-order-miniKanren"]
+	path = first-order-miniKanren
+	url = https://github.com/gregr/first-order-miniKanren
