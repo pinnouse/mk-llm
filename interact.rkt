@@ -24,5 +24,5 @@
            (appendo prefix `(,first) sy)))))
 
 ;; TODO: Readline for the query
-(explore step (query (q) (reverseo q '(3 2 1))))
+(explore step (query (q) (appendo q '(2 1) '(3 2 1))))
 

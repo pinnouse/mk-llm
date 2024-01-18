@@ -1,0 +1,60 @@
+Starting interaction
+============================
+
+
+Using step procedure: step
+Exploring query:
+(query (q) (appendo q (quote (2 1)) (quote (3 2 1))))
+
+================================================================================
+Current Depth: 0
+Number of Choices: 1
+
+| Choice 1:
+|  q = #s(var q 1)
+|  Constraints:
+|  * (appendo #s(var q 1) (2 1) (3 2 1))
+
+[h]elp, [u]ndo, or choice number>
+Model responds: 1
+
+================================================================================
+Previous Choice:
+|  q = #s(var q 1)
+|  Constraints:
+|  * (appendo #s(var q 1) (2 1) (3 2 1))
+
+Current Depth: 1
+Number of Choices: 1
+
+| Choice 1:
+|  q = (3 . #s(var b 3))
+|  Constraints:
+|  * (appendo #s(var b 3) (2 1) (2 1))
+
+[h]elp, [u]ndo, or choice number>
+Model responds: 1
+
+================================================================================
+Previous Choice:
+|  q = (3 . #s(var b 3))
+|  Constraints:
+|  * (appendo #s(var b 3) (2 1) (2 1))
+
+Current Depth: 2
+Number of Choices: 2
+
+| Choice 1:
+|  q = (3)
+|  No constraints
+
+| Choice 2:
+|  q = (3 2 . #s(var b 6))
+|  Constraints:
+|  * (appendo #s(var b 6) (2 1) (1))
+
+[h]elp, [u]ndo, or choice number>
+Model responds: 1
+
+
+End of interaction. Goodbye.

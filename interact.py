@@ -4,6 +4,7 @@ https://github.com/xuexue/neuralkanren/blob/master/interact.py"""
 from __future__ import print_function
 import random
 from subprocess import Popen, PIPE
+from time import sleep
 
 class Interaction(object):
     """Interaction object communicates with racket to solve the miniKanren
@@ -25,9 +26,11 @@ class Interaction(object):
 
     def __enter__(self):
         """Start racket process, send query to process."""
-        self.proc = Popen(['racket', self.MK_SCRIPT], stdin=PIPE, stdout=PIPE)
-        self._send(self.query)
-        self._read_state()
+        self.proc = Popen(['racket', self.MK_SCRIPT], bufsize=0, text=True, stdin=PIPE, stdout=PIPE)
+        # TODO: Send an actual query
+
+        # self._send(self.query)
+        # self._read_state()
         return self
 
     def __exit__(self, *args):
@@ -39,7 +42,7 @@ class Interaction(object):
 
     def _read(self):
         """Helper function to read from process."""
-        txt = self.proc.stdout.readline().rstrip().decode('utf-8')
+        txt = self.proc.stdout.readline().rstrip()
         if not txt:
             return None
         return txt
@@ -50,7 +53,7 @@ class Interaction(object):
         Args:
             datum: the content of the message to be relayed in plain text.
         """
-        self.proc.stdin.write((datum + '\n').encode('utf-8'))
+        self.proc.stdin.write(datum + '\n')
         self.proc.stdin.flush()
 
     def _good_path(self):
@@ -75,11 +78,25 @@ class Interaction(object):
         while True:
             if nextline is not None:
                 buff += nextline
-                if self.PROMPT_ENDING in nextline:
+                if self.PROMPT_ENDING in nextline \
+                   or 'Hit enter to continue' in nextline:
                     break
             buff += '\n'
             nextline = self._read()
         return buff
+
+    def acceptable_input(self, datum: str):
+        if datum in ['h', 'u']:
+            return True
+        elif datum.isdecimal():
+            return True
+        return False
+
+    def send(self, datum: str):
+        datum = datum.strip()
+        if not self.acceptable_input(datum):
+            return
+        self._send(datum)
 
     def follow_path(self, path: str):
         """Communicate to racket process to expand candidate at given path.
