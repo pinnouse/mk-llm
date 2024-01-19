@@ -43,12 +43,14 @@ if __name__ == "__main__":
 #                  running = False
 #             env.send(response)
         i = 0
-        while i < 3:
+        while i < 100:
             prompt = env.read_prompt()
             print(prompt)
+            if 'Number of results' in prompt:
+                break
             messages.append({ "role": "user", "content": prompt })
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4-turbo",
                 # consider outputing to JSON object?
                 messages=messages
             )
