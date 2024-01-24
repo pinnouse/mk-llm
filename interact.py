@@ -18,7 +18,7 @@ class Interaction(object):
     MK_SCRIPT = 'interact.rkt'
     PROMPT_ENDING = '>'
 
-    def __init__(self, query):
+    def __init__(self, query = None):
         self.query = query
         self.proc = None
         self.state = None
@@ -79,21 +79,20 @@ class Interaction(object):
             if nextline is not None:
                 buff += nextline
                 if self.PROMPT_ENDING in nextline \
-                   or 'Hit enter to continue' in nextline:
+                    or 'Hit enter to continue' in nextline \
+                    or 'Finished' in nextline:
                     break
             buff += '\n'
             nextline = self._read()
         return buff
 
     def acceptable_input(self, datum: str):
-        if datum in ['h', 'u']:
-            return True
-        elif datum.isdecimal():
-            return True
-        return False
+        return datum in ['h', 'u'] \
+            or datum.isdecimal()
 
     def send(self, datum: str):
         datum = datum.strip()
+        datum = datum[-1]
         if not self.acceptable_input(datum):
             return
         self._send(datum)
