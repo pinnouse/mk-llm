@@ -61,6 +61,7 @@ if __name__ == "__main__":
                 match = steps_matcher.search(prompt)
                 if match:
                     steps = int(match.group(1))
+                    print(f'\nSteps taken so far: {steps_taken}')
                     print(f'Took {steps} steps\n############################\n\n')
                     steps_taken.append(steps)
                 messages = base_message()
@@ -76,6 +77,10 @@ if __name__ == "__main__":
             print(f'Model responds:\n> {model_message.content}\n=====\n')
             messages.append(model_message)
             env.send(model_message.content)
+            # messages quite long, let's trim some
+            if len(messages) > 40:
+                messages.pop(1)
+                messages.pop(1)
             i += 1
 
     print("\n\nEnd of interaction. Goodbye.")
