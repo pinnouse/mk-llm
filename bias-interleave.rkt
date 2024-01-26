@@ -8,7 +8,7 @@
   (syntax-rules ()
     ((_ (q ...))
      (step-reset-and-print!
-      (run/step step 1 q ...)
+      (run/step-simplify step 1 q ...)
       ))))
 
 (define-syntax runs
