@@ -64,7 +64,8 @@ if __name__ == "__main__":
                     print(f'\nSteps taken so far: {steps_taken}')
                     print(f'Took {steps} steps\n############################\n\n')
                     steps_taken.append(steps)
-                messages = base_message()
+                messages.clear()
+                messages.extend(base_message())
                 continue
             messages.append({ "role": "user", "content": prompt })
             response = client.chat.completions.create(
@@ -77,10 +78,10 @@ if __name__ == "__main__":
             print(f'Model responds:\n> {model_message.content}\n=====\n')
             messages.append(model_message)
             env.send(model_message.content)
-            # messages quite long, let's trim some
-            if len(messages) > 40:
-                messages.pop(1)
-                messages.pop(1)
+            # messages quite long, let's trim some (keep the initial prompt)
+            if len(messages) > 80:
+                messages.pop(3)
+                messages.pop(3)
             i += 1
 
     print("\n\nEnd of interaction. Goodbye.")
