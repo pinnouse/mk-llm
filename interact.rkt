@@ -41,5 +41,5 @@
  (query (q) (appendo '(1 2 3 4) '(5) q))
  (query (q r) (=/= q '()) (=/= q '(1)) (=/= q '(1 2)) (=/= q r) (appendo q r '(1 2 3 1 2 3)))
  (query (q r) (appendo q r '(1 2 3 4 5 6 7 8 9)) (appendo r q '(7 8 9 1 2 3 4 5 6))))
-(println "Done. Goodbye.>")
+(printf "Done. Goodbye.>\n")
 
