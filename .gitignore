@@ -4,3 +4,5 @@
 .mise.toml
 
 __pycache__
+
+logs/**

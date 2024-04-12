@@ -2,9 +2,8 @@
 https://github.com/xuexue/neuralkanren/blob/master/interact.py"""
 
 from __future__ import print_function
-import random
 from subprocess import Popen, PIPE
-from time import sleep
+
 
 class Interaction(object):
     """Interaction object communicates with racket to solve the miniKanren
@@ -15,10 +14,10 @@ class Interaction(object):
             ...
     """
 
-    MK_SCRIPT = 'interact.rkt'
-    PROMPT_ENDING = '>'
+    MK_SCRIPT = "interact.rkt"
+    PROMPT_ENDING = ">"
 
-    def __init__(self, query = None):
+    def __init__(self, query=None):
         self.query = query
         self.proc = None
         self.state = None
@@ -26,7 +25,9 @@ class Interaction(object):
 
     def __enter__(self):
         """Start racket process, send query to process."""
-        self.proc = Popen(['racket', self.MK_SCRIPT], bufsize=0, text=True, stdin=PIPE, stdout=PIPE)
+        self.proc = Popen(
+            ["racket", self.MK_SCRIPT], bufsize=1, text=True, stdin=PIPE, stdout=PIPE
+        )
         # TODO: Send an actual query
 
         # self._send(self.query)
@@ -37,8 +38,8 @@ class Interaction(object):
         """Stop the process."""
         if self.proc is not None:
             # self.proc.stdin.close()
-            self.proc.terminate();
-            self.proc.wait(timeout=3);
+            self.proc.terminate()
+            self.proc.wait(timeout=3)
 
     def _read(self):
         """Helper function to read from process."""
@@ -53,7 +54,7 @@ class Interaction(object):
         Args:
             datum: the content of the message to be relayed in plain text.
         """
-        self.proc.stdin.write(datum + '\n')
+        self.proc.stdin.write(datum + "\n")
         self.proc.stdin.flush()
 
     def _good_path(self):
@@ -61,7 +62,7 @@ class Interaction(object):
         if self.state is None:
             self.good_path = None
         else:
-            self._send('good-path')
+            self._send("good-path")
             self.good_path = self._read()
 
     def _read_state(self):
@@ -70,25 +71,25 @@ class Interaction(object):
         self._good_path()
 
     def read_prompt(self):
-        """Helper to try and read the whole given prompt.
-        """
+        """Helper to try and read the whole given prompt."""
         buff = ""
         nextline = self._read()
         # while nextline is not None:
         while True:
             if nextline is not None:
                 buff += nextline
-                if self.PROMPT_ENDING in nextline \
-                    or 'Hit enter to continue' in nextline \
-                    or 'Finished' in nextline:
+                if (
+                    self.PROMPT_ENDING in nextline
+                    or "enter" in nextline
+                    or "Finished" in nextline
+                ):
                     break
-            buff += '\n'
+            buff += "\n"
             nextline = self._read()
         return buff
 
     def acceptable_input(self, datum: str):
-        return datum in ['h', 'u'] \
-            or datum.isdecimal()
+        return datum in ["u"] or datum.isdecimal()
 
     def send(self, datum: str):
         datum = datum.strip()
@@ -109,11 +110,10 @@ class Interaction(object):
         return feedback
 
     def steps_remaining(self):
-        self._send('steps-remaining')
+        self._send("steps-remaining")
         return self._read()
 
     def jump_to_steps_remaining(self, n):
         # TODO: Determine if these extra commands are required.
-        self._send(['jump-to-steps-remaining', n])
+        self._send(["jump-to-steps-remaining", n])
         self._read_state()
-
