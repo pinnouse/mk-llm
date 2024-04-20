@@ -4,6 +4,8 @@ https://github.com/xuexue/neuralkanren/blob/master/interact.py"""
 from __future__ import print_function
 from subprocess import Popen, PIPE
 
+import re
+
 
 class Interaction(object):
     """Interaction object communicates with racket to solve the miniKanren
@@ -89,11 +91,11 @@ class Interaction(object):
         return buff
 
     def acceptable_input(self, datum: str):
-        return datum in ["u"] or datum.isdecimal()
+        return datum in ["u"] or re.match(r"(\d\.)*\d+", datum)
 
     def send(self, datum: str):
         datum = datum.strip()
-        datum = datum[-1]
+        # datum = datum[-1]
         if not self.acceptable_input(datum):
             return
         self._send(datum)

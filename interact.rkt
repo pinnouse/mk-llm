@@ -15,12 +15,9 @@
 (define-syntax exp-single
   (syntax-rules ()
     ((_ q) (begin
-             #| (newline) |#
-             #| (displayln "Solving for query:") |#
-             #| (pretty-print 'q) |#
-             #| (newline) |#
-             #| (step-reset-and-print! (drive/json step q)))))) |#
-             (step-reset-and-print! (drive/depth-stdio step q))))))
+             (step-reset-and-print! (drive/depth-stdio step q))
+             (displayln "Press Enter to continue.>")
+             (read)))))
 (define-syntax explore-count
   (syntax-rules ()
     ((_ (query body ...) ...) (begin
@@ -124,14 +121,13 @@
 #|  (query (q r) (appendo q r '(1 2 3 4 5 6 7 8 9)) (appendo r q '(7 8 9 1 2 3 4 5 6)))) |#
 
 (explore-count
-  
   ; sanity-check
-  ; (query (q) (evalo `(cons (quote 1) ,q) '(1 2)))
+  #| (query (q) (evalo `(cons (quote 1) ,q) '(1 2))) |#
   ; pair-swap
   ; (query (q) (evalo `(app (lambda . ,q) (quote (11 . 22))) (quote (22 . 11))))
-  (query (q)
-         (evalo `(app (lambda . ,q) (quote (11 . 22))) (quote (22 . 11)))
-         (evalo `(app (lambda . ,q) (quote (33 . 44))) (quote (44 . 33))))
+  #| (query (q) |#
+  #|        (evalo `(app (lambda . ,q) (quote (11 . 22))) (quote (22 . 11))) |#
+  #|        (evalo `(app (lambda . ,q) (quote (33 . 44))) (quote (44 . 33)))) |#
   ; repeat-N
   ; (query (q) (evalo `(app (lambda . ,q) (quote (1 () a b x))) (quote ((1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x)))))
   ; drop-last-N
@@ -141,17 +137,18 @@
   ; quine
   ; (query (q) (evalo q q))
   ; (query (q) (evalo `(app (lambda . ,q) (quote ((1 2 3) (4 5 6) (7 8 9)))) (quote ((1 4 7) (2 5 8) (3 6 9)))))
-  (query (q)
-    (evalo `(app (lambda . ,q) (quote (1 () a b x))) (quote ((1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x))))
-    (evalo `(app (lambda . ,q) (quote (2 (3) 4 5 6))) (quote ((2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6)))))
+  #| (query (q) |#
+  #|   (evalo `(app (lambda . ,q) (quote (1 () a b x))) (quote ((1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x)))) |#
+  #|   (evalo `(app (lambda . ,q) (quote (2 (3) 4 5 6))) (quote ((2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6))))) |#
+  ; repeat 4
   #| (query (q) |#
   #|   (evalo `(app (lambda . ,q) (quote (1 () a b x))) (quote ((1 () a b x) (1 () a b x) (1 () a b x) (1 () a b x)))) |#
   #|   (evalo `(app (lambda . ,q) (quote (2 (3) 4 5 6))) (quote ((2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6) (2 (3) 4 5 6))))) |#
   ; drop-last-N
   #| ((q) (evalo `(app (lambda . ,q) (quote ((1 #f a b x 0 1) (#f a b x 0 1 1) (a b x 0 1 1 #f) (b x 0 1 1 #f a) (x 0 1 1 #f a b)))) (quote ((1 #f a b x 0) (#f a b x 0 1) (a b x 0 1 1) (b x 0 1 1 #f) (x 0 1 1 #f a))))) |#
-  #| (query (q) |#
-  #|   (evalo `(app (lambda . ,q) (quote ((1 #f a b x 0 1) (#f a b x 0 1 1) (a b x 0 1 1 #f) (b x 0 1 1 #f a) (x 0 1 1 #f a b)))) (quote ((1 #f a b x 0) (#f a b x 0 1) (a b x 0 1 1) (b x 0 1 1 #f) (x 0 1 1 #f a)))) |#
-  #|   (evalo `(app (lambda . ,q) (quote ((2 #t 3 4 5 6 7) (#t 3 4 5 6 7 2) (3 4 5 6 7 2 #t) (4 5 6 7 2 #t 3) (5 6 7 2 #t 3 4)))) (quote ((2 #t 3 4 5 6) (#t 3 4 5 6 7) (3 4 5 6 7 2) (4 5 6 7 2 #t) (5 6 7 2 #t 3))))) |#
+  (query (q)
+    (evalo `(app (lambda . ,q) (quote ((1 #f a b x 0 1) (#f a b x 0 1 1) (a b x 0 1 1 #f) (b x 0 1 1 #f a) (x 0 1 1 #f a b)))) (quote ((1 #f a b x 0) (#f a b x 0 1) (a b x 0 1 1) (b x 0 1 1 #f) (x 0 1 1 #f a))))
+    (evalo `(app (lambda . ,q) (quote ((2 #t 3 4 5 6 7) (#t 3 4 5 6 7 2) (3 4 5 6 7 2 #t) (4 5 6 7 2 #t 3) (5 6 7 2 #t 3 4)))) (quote ((2 #t 3 4 5 6) (#t 3 4 5 6 7) (3 4 5 6 7 2) (4 5 6 7 2 #t) (5 6 7 2 #t 3)))))
   ; bring-last-to-front-N
   #| ((q) (evalo `(app (lambda . ,q) (quote ((1 b #f a b #f 0 a 1 x) (x #f a b #f 0 a 1 b 1) (a b #f 0 a x 1 b 1 #f) (b #f 0 a 1 x b 1 #f a) (0 a 1 b 1 #f x a b #f)))) (quote ((x 1 b #f a b #f 0 a 1) (1 x #f a b #f 0 a 1 b) (#f a b #f 0 a x 1 b 1) (a b #f 0 a 1 x b 1 #f) (#f 0 a 1 b 1 #f x a b))))) |#
   ; transpose
@@ -159,7 +156,7 @@
   #|   (evalo `(app (lambda . ,q) (quote ((1 2 3) (4 5 6) (7 8 9)))) (quote ((1 4 7) (2 5 8) (3 6 9)))) |#
   #|   (evalo `(app (lambda . ,q) (quote ((a b c) (d e f) (g h i))))) (quote ((a d g) (b e h) (c f i)))) |#
   ; quine
-  #| (query (q) (evalo q q)) |#
+  (query (q) (evalo q q))
 )
 (printf "Done. Goodbye.>\n")
 

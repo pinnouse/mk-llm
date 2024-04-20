@@ -7,10 +7,11 @@
 (define-syntax run-single
   (syntax-rules ()
     ((_ (q ...))
-     (step-reset-and-print!
-      #| (run/step-simplify step 1 q ...) |#
-      (run/step step 1 q ...)
-      ))))
+     #| (step-reset-and-print! |#
+     #|  #| (run/step-simplify step 1 q ...) |# |#
+     #|  (run/step step 1 q ...) |#
+     #|  )))) |#
+     (run/step step 1 q ...))))
 
 (define-syntax runs
   (syntax-rules ()
